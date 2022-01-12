@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/v1/task")
 @RequiredArgsConstructor
@@ -27,8 +28,8 @@ public class TaskController {
 
     @RequestMapping(method = RequestMethod.GET, value = "getTask")
     public TaskDto getTask(@RequestParam Long taskId) throws TaskNotFoundException {
-        Optional<Task> task = service.getTaskById(taskId);
-        return taskMapper.mapToTaskDto(task.orElseThrow(TaskNotFoundException::new));
+        Optional<Task> optionalTask = service.getTaskById(taskId);
+        return taskMapper.mapToTaskDto(optionalTask.orElseThrow(TaskNotFoundException::new));
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "updateTask")
@@ -38,7 +39,7 @@ public class TaskController {
         return taskMapper.mapToTaskDto(savedTask);
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "createTask", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.POST, value = "createTask", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public void createTask(@RequestBody TaskDto taskDto) {
             Task task = taskMapper.mapToTask(taskDto);
             service.saveTask(task);

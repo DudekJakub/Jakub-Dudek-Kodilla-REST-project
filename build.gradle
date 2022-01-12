@@ -2,6 +2,7 @@ plugins {
 	id 'org.springframework.boot' version '2.6.1'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
+	id 'war'
 }
 
 group = 'com.crud'
@@ -26,6 +27,8 @@ dependencies {
 
 	testCompileOnly 'org.projectlombok:lombok:1.18.12'
 	testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
+
+	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
 }
 
 test {
