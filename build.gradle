@@ -29,6 +29,9 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok:1.18.22'
 	annotationProcessor 'org.projectlombok:lombok:1.18.22'
 
+	annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+	compileJava.inputs.files(processResources)
+
 	testCompileOnly 'org.projectlombok:lombok:1.18.22'
 	testAnnotationProcessor 'org.projectlombok:lombok:1.18.22'
 
