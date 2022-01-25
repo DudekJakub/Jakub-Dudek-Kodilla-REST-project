@@ -29,7 +29,7 @@ public class TrelloController {
         return trelloClient.getTrelloListById(id);
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "createNewCard")
+    @RequestMapping(method = RequestMethod.POST, value = "createTrelloCard")
     public CreatedTrelloCard createdTrelloCard(@RequestBody TrelloCardDto trelloCardDto) {
         return trelloClient.createNewCard(trelloCardDto);
     }
