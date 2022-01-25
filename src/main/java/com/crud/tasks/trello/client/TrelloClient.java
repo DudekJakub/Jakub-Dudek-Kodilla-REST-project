@@ -40,7 +40,6 @@ public class TrelloClient {
 
     public List<TrelloBoardDto> getTrelloBoards() {
         URI url = buildUrl();
-
         try {
             TrelloBoardDto[] boardsResponse = restTemplate.getForObject(url, TrelloBoardDto[].class);
             return Optional.ofNullable(boardsResponse)
@@ -61,7 +60,6 @@ public class TrelloClient {
                 .queryParam("token", trelloConfig.getTrelloToken())
                 .build()
                 .encode().toUri();
-
         try {
             TrelloListDto trelloListDto = restTemplate.getForObject(url, TrelloListDto.class);
             return Optional.ofNullable(trelloListDto);
@@ -81,7 +79,6 @@ public class TrelloClient {
                 .queryParam("idList", trelloCardDto.getListId())
                 .build()
                 .encode().toUri();
-
         return restTemplate.postForObject(url, null, CreatedTrelloCard.class);
     }
 
@@ -94,7 +91,6 @@ public class TrelloClient {
                 .queryParam("pos", trelloCardDto.getPos())
                 .build()
                 .encode().toUri();
-
         restTemplate.put(uri, null);
     }
 
@@ -104,7 +100,6 @@ public class TrelloClient {
                 .queryParam("token", trelloConfig.getTrelloToken())
                 .build()
                 .encode().toUri();
-
         restTemplate.delete(url);
     }
 }
