@@ -3,7 +3,9 @@ package com.crud.tasks.trello.client;
 import com.crud.tasks.domain.CreatedTrelloCard;
 import com.crud.tasks.domain.TrelloBoardDto;
 import com.crud.tasks.domain.TrelloCardDto;
+import com.crud.tasks.domain.TrelloListDto;
 import com.crud.tasks.trello.config.TrelloConfig;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,7 +54,22 @@ public class TrelloClient {
             LOGGER.error(e.getMessage(), e);
             return Collections.emptyList();
         }
+    }
 
+    public Optional<TrelloListDto> getTrelloListById(String id) {
+        URI url = UriComponentsBuilder.fromHttpUrl(trelloConfig.getTrelloApiEndpoint() + "/lists/" + id)
+                .queryParam("key", trelloConfig.getTrelloAppKey())
+                .queryParam("token", trelloConfig.getTrelloToken())
+                .build()
+                .encode().toUri();
+
+        try {
+            TrelloListDto trelloListDto = restTemplate.getForObject(url, TrelloListDto.class);
+            return Optional.ofNullable(trelloListDto);
+        } catch (RestClientException e) {
+            LOGGER.error(e.getMessage(), e);
+            return Optional.empty();
+        }
     }
 
     public CreatedTrelloCard createNewCard(TrelloCardDto trelloCardDto) {
@@ -67,6 +84,19 @@ public class TrelloClient {
                 .encode().toUri();
 
         return restTemplate.postForObject(url, null, CreatedTrelloCard.class);
+    }
+
+    public void updateCard(String id, TrelloCardDto trelloCardDto) {
+        URI uri = UriComponentsBuilder.fromHttpUrl(trelloConfig.getTrelloApiEndpoint() + "/cards/" + id)
+                .queryParam("key", trelloConfig.getTrelloAppKey())
+                .queryParam("token", trelloConfig.getTrelloToken())
+                .queryParam("name", trelloCardDto.getName())
+                .queryParam("desc", trelloCardDto.getDescription())
+                .queryParam("pos", trelloCardDto.getPos())
+                .build()
+                .encode().toUri();
+
+        restTemplate.put(uri, null);
     }
 
     public void deleteCard(String id) {
