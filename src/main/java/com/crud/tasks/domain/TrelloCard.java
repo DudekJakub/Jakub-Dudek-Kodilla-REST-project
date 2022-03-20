@@ -1,17 +1,13 @@
 package com.crud.tasks.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 
-@Data
 @AllArgsConstructor
-@NoArgsConstructor
+@Getter
 @Builder
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class TrelloCardDto {
+public class TrelloCard {
 
     private String name;
     private String description;
