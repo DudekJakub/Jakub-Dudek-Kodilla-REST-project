@@ -20,8 +20,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class TrelloController {
 
+    @Autowired
     private final TrelloClient trelloClient;
-    private final TrelloService trelloService;
 
     @Autowired
     private final TrelloFacade trelloFacade;

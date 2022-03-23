@@ -3,6 +3,7 @@ package com.crud.tasks.trello.client;
 import com.crud.tasks.domain.CreatedTrelloCardDto;
 import com.crud.tasks.domain.TrelloBoardDto;
 import com.crud.tasks.domain.TrelloCardDto;
+import com.crud.tasks.domain.TrelloListDto;
 import com.crud.tasks.trello.config.TrelloConfig;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,9 +16,10 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class TrelloClientTest {
@@ -102,4 +104,46 @@ class TrelloClientTest {
         assertEquals(0, resultEmptyList.size());
     }
 
+    @Test
+    public void shouldReturnListById() throws URISyntaxException {
+        //Given
+        when(trelloConfig.getTrelloApiEndpoint()).thenReturn("http://test.com");
+        when(trelloConfig.getTrelloAppKey()).thenReturn("test_key");
+        when(trelloConfig.getTrelloToken()).thenReturn("test_token");
+
+        TrelloListDto trelloList = new TrelloListDto("1", "test", false);
+
+        URI uri = new URI("http://test.com/lists/1?key=test_key&token=test_token");
+
+        when(restTemplate.getForObject(uri, TrelloListDto.class)).thenReturn(trelloList);
+
+        //When
+        Optional<TrelloListDto> optionalList = trelloClient.getTrelloListById("1");
+        TrelloListDto resultList = optionalList.get();
+
+        //Then
+        assertNotNull(resultList);
+        assertEquals("1", resultList.getId());
+        assertEquals("test", resultList.getName());
+        assertFalse(resultList.isClosed());
+    }
+
+    @Test
+    public void shouldUpdateCard() throws URISyntaxException {
+        //Given
+        when(trelloConfig.getTrelloApiEndpoint()).thenReturn("http://test.com");
+        when(trelloConfig.getTrelloAppKey()).thenReturn("test_key");
+        when(trelloConfig.getTrelloToken()).thenReturn("test_token");
+
+        CreatedTrelloCardDto cardDto = new CreatedTrelloCardDto("1", "test_card", "http://test.com/cardId/1");
+        TrelloCardDto updateCard = new TrelloCardDto("new_name", "new_description", "bottom", "10");
+
+        URI uri = new URI("http://test.com/cards/1?key=test_key&token=test_token&name=new_name&desc=new_description&pos=bottom");
+
+        //When
+        trelloClient.updateCard(cardDto.getId(), updateCard);
+
+        //Then
+        verify(restTemplate, times(1)).put(uri, null);
+    }
 }

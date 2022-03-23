@@ -1,9 +1,6 @@
 package com.crud.tasks.trello.facade;
 
-import com.crud.tasks.domain.TrelloBoard;
-import com.crud.tasks.domain.TrelloBoardDto;
-import com.crud.tasks.domain.TrelloList;
-import com.crud.tasks.domain.TrelloListDto;
+import com.crud.tasks.domain.*;
 import com.crud.tasks.mapper.TrelloMapper;
 import com.crud.tasks.service.TrelloService;
 import com.crud.tasks.trello.client.TrelloClient;
@@ -17,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.*;
@@ -78,7 +76,7 @@ public class TrelloFacadeTestSuite {
     }
 
     @Test
-    public void shouldFetchPresetBoardsListButEmpty() {
+    public void shouldFetchEmptyList() {
         //Given
         List<TrelloListDto> trelloListDtos = new ArrayList<>();
         trelloListDtos.add(new TrelloListDto("test_list", "test_name", false));
@@ -101,9 +99,24 @@ public class TrelloFacadeTestSuite {
         List<TrelloBoardDto> fetchedTrelloBoards = trelloFacade.fetchTrelloBoards();
 
         //Then
-        System.out.println(fetchedTrelloBoards); //just checking for sure
-
         assertNotNull(fetchedTrelloBoards);
         assertEquals(0, fetchedTrelloBoards.size());
+    }
+
+    @Test
+    public void shouldCreateCard() {
+        //Given
+        TrelloCardDto cardToCreate = new TrelloCardDto("test_card", "test_desc", "bottom", "10");
+        CreatedTrelloCardDto createdCard = new CreatedTrelloCardDto("1", "test_card", "http://test.com/card/1");
+
+        when(trelloService.createTrelloCard(cardToCreate)).thenReturn(createdCard);
+        when(trelloMapper.mapToCardDto(any())).thenReturn(cardToCreate);
+
+        //When
+        CreatedTrelloCardDto newCard = trelloFacade.createCard(cardToCreate);
+
+        //Then
+        assertNotNull(newCard);
+        assertEquals("test_card", newCard.getName());
     }
 }
