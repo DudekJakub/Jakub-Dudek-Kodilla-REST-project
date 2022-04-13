@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -75,25 +76,26 @@ class TaskControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].content", Matchers.is("anything_here")));
     }
 
-//    @Test
-//    void shouldRetrieveOneTaskById() throws Exception {
-//        //Given
-//        TaskDto taskDto = new TaskDto(1L, "test_title", "test_content");
-//        Task task = new Task(1L, "test_title", "test_content");
-//
-//        when(dbService.getTaskById(any(Long.class))).thenReturn(Optional.of(task));
-//        when(taskMapper.mapToTask(taskDto)).thenReturn(task);
-//
-//        //When & Then
-//        mockMvc
-//                .perform(MockMvcRequestBuilders
-//                        .get("/v1/task/getTask").param("taskId","1")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .characterEncoding("UTF-8"))
-//                .andExpect(MockMvcResultMatchers.status().isOk())
-//                .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.notNullValue()))
-//                .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.is(1)));
-//                .andExpect(MockMvcResultMatchers.jsonPath("$.content", Matchers.is("test_title")));
+    @Test
+    void shouldRetrieveOneTaskById() throws Exception {
+        //Given
+        TaskDto taskDto = new TaskDto(1L, "test_title", "test_content");
+        Task task = new Task(1L, "test_title", "test_content");
+
+        when(dbService.getTaskById(any(Long.class))).thenReturn(Optional.of(task));
+        System.out.println(Optional.of(task));
+        when(taskMapper.mapToTask(taskDto)).thenReturn(task);
+
+        //When & Then
+        mockMvc
+                .perform(MockMvcRequestBuilders
+                        .get("/v1/task/getTask").param("taskId","1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("UTF-8"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.notNullValue()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.is(1)));
+//                .andExpect(MockMvcResultMatchers.jsonPath("$.content", Matchers.is("test_title")))
 //                .andExpect(MockMvcResultMatchers.jsonPath("$.content", Matchers.is("test_content")));
-//    }
+    }
 }
