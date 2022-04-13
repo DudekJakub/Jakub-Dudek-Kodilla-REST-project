@@ -76,7 +76,18 @@ class TaskControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].content", Matchers.is("anything_here")));
     }
 
-    @Test
+
+    /** Błąd dla poniższej metody:
+
+     No value at JSON path "$"
+     java.lang.AssertionError: No value at JSON path "$"
+     at org.springframework.test.util.JsonPathExpectationsHelper.evaluateJsonPath(JsonPathExpectationsHelper.java:304)
+     at org.springframework.test.util.JsonPathExpectationsHelper.assertValue(JsonPathExpectationsHelper.java:73)
+     at org.springframework.test.web.servlet.result.JsonPathResultMatchers.lambda$value$0(JsonPathResultMatchers.java:87)
+     at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:212)
+     */
+
+     @Test
     void shouldRetrieveOneTaskById() throws Exception {
         //Given
         TaskDto taskDto = new TaskDto(1L, "test_title", "test_content");
