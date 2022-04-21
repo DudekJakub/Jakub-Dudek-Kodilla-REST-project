@@ -1,7 +1,6 @@
 package com.crud.tasks.service;
 
 import com.crud.tasks.domain.Mail;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -10,7 +9,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 class SimpleEmailServiceTest {
@@ -33,7 +31,7 @@ class SimpleEmailServiceTest {
         mailMessage.setCc(mail.getToCc());
 
         //When
-        simpleEmailService.send(mail);
+        simpleEmailService.simpleSend(mail);
 
         //Then
         verify(javaMailSender, times(1)).send(mailMessage);
@@ -54,7 +52,7 @@ class SimpleEmailServiceTest {
         mailMessage.setText(mail.getMessage());
 
         //When
-        simpleEmailService.send(mail);
+        simpleEmailService.simpleSend(mail);
 
         //Then
         verify(javaMailSender, times(1)).send(mailMessage);
