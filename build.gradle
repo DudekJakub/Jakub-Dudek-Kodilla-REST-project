@@ -36,6 +36,9 @@ dependencies {
 	//MAIL-SERVICE
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
 
+	//THYMELEAF
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
 	//DATABASES
 	runtimeOnly 'mysql:mysql-connector-java'
 	runtimeOnly 'org.postgresql:postgresql:42.3.1'
