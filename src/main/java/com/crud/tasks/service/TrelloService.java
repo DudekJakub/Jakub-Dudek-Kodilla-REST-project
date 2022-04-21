@@ -35,7 +35,7 @@ public class TrelloService {
                 .toCc(null)
                 .build();
 
-        Optional.ofNullable(newCard).ifPresent(card -> emailService.simpleSend(mail));
+        Optional.ofNullable(newCard).ifPresent(card -> emailService.send(mail));
 
         return newCard;
     }
