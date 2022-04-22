@@ -28,10 +28,10 @@ public class MailCreatorService {
         context.setVariable("tasks_url", "https://dudekjakub.github.io/");
         context.setVariable("button", "Visit website");
         context.setVariable("show_button", false);
-        context.setVariable("is_friend", false);
-        context.setVariable("user_nickName", _adminConfiguration.getUserNickName());
+        context.setVariable("is_friend", true);
+        context.setVariable("user_nickName", _adminConfiguration);
         context.setVariable("goodbye_message", "Yours faithfully " + _adminConfiguration.getAdminName());
-        context.setVariable("admin_name", _adminConfiguration.getAdminName());
+        context.setVariable("admin_name", _adminConfiguration);
         context.setVariable("company_detail_name", _adminConfiguration.getCompanyName());
         context.setVariable("company_detail_goal", _adminConfiguration.getCompanyGoal());
         context.setVariable("company_detail_email", _adminConfiguration.getCompanyEmail());
