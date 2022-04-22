@@ -14,8 +14,8 @@ public class AdminConfiguration {
     @Value("${admin.name}")
     private String adminName;
 
-    @Value("${user.name}")
-    private String userName;
+    @Value("${user.nickName}")
+    private String userNickName;
 
     @Value("${info.app.company.name}")
     private String companyName;

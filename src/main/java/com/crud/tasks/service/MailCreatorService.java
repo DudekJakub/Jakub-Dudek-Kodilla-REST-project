@@ -27,7 +27,7 @@ public class MailCreatorService {
         context.setVariable("message", message);
         context.setVariable("tasks_url", "https://dudekjakub.github.io/");
         context.setVariable("button", "Visit website");
-        context.setVariable("user_name", _adminConfiguration.getUserName());
+        context.setVariable("user_nickName", _adminConfiguration.getUserNickName());
         context.setVariable("goodbye_message", "Yours faithfully " + _adminConfiguration.getAdminName());
         context.setVariable("admin_name", _adminConfiguration.getAdminName());
         context.setVariable("company_detail_name", _adminConfiguration.getCompanyName());
