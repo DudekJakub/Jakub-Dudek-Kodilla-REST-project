@@ -1,5 +1,6 @@
 package com.crud.tasks.service;
 
+import com.crud.tasks.config.AdminConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -10,11 +11,14 @@ import org.thymeleaf.context.Context;
 public class MailCreatorService {
 
     @Qualifier("templateEngine")
-    TemplateEngine _templateEngine;
+    private final TemplateEngine _templateEngine;
+
+    private final AdminConfiguration _adminConfiguration;
 
     @Autowired
-    public MailCreatorService(TemplateEngine templateEngine) {
+    public MailCreatorService(TemplateEngine templateEngine, AdminConfiguration adminConfiguration) {
         this._templateEngine = templateEngine;
+        this._adminConfiguration = adminConfiguration;
     }
 
     public String buildTrelloCardEmail(String message) {
@@ -22,6 +26,13 @@ public class MailCreatorService {
         context.setVariable("message", message);
         context.setVariable("tasks_url", "https://dudekjakub.github.io/");
         context.setVariable("button", "Visit website");
+        context.setVariable("user_name", _adminConfiguration.getUserName());
+        context.setVariable("goodbye_message", "Yours faithfully");
+        context.setVariable("admin_name", _adminConfiguration.getAdminName());
+        context.setVariable("company_detail_name", _adminConfiguration.getCompanyName());
+        context.setVariable("company_detail_goal", _adminConfiguration.getCompanyGoal());
+        context.setVariable("company_detail_email", _adminConfiguration.getCompanyEmail());
+        context.setVariable("company_detail_phone", _adminConfiguration.getCompanyPhone());
         return _templateEngine.process("mail/created-trello-card-mail",context);
     }
 }
