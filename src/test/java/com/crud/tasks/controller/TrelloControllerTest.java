@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.Mockito.when;
@@ -52,7 +53,7 @@ class TrelloControllerTest {
     @Test
     void shouldFetchTrelloBoards() throws Exception {
         //Given
-        List<TrelloListDto> trelloListDtos = List.of(new TrelloListDto("1", "myList", false));
+        List<TrelloListDto> trelloListDtos = List.of(new TrelloListDto("1", "myList", false, new ArrayList<>()));
         List<TrelloBoardDto> trelloBoardDtos = List.of(new TrelloBoardDto("1", "myBoard", trelloListDtos));
 
         when(trelloFacade.fetchTrelloBoards()).thenReturn(trelloBoardDtos);

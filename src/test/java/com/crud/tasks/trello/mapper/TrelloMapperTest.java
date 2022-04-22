@@ -25,9 +25,9 @@ public class TrelloMapperTest {
 
     @BeforeEach
     public void setStartVariables() {
-        trelloListDtos.add(new TrelloListDto("1", "test_listDTO", false));
+        trelloListDtos.add(new TrelloListDto("1", "test_listDTO", false, new ArrayList<>()));
         trelloBoardDtos.add(new TrelloBoardDto("1", "test_boardDTO", trelloListDtos));
-        trelloLists.add(new TrelloList("1", "test_list", false));
+        trelloLists.add(new TrelloList("1", "test_list", false, new ArrayList<>()));
         trelloBoards.add(new TrelloBoard("1", "test_board", trelloLists));
     }
 

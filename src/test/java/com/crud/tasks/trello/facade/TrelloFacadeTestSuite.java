@@ -38,13 +38,13 @@ public class TrelloFacadeTestSuite {
     public void shouldFetchPresentBoardsListWithOnePosition() {
         //Given
         List<TrelloListDto> trelloListDtos = new ArrayList<>();
-        trelloListDtos.add(new TrelloListDto("1", "In_Progress", true));
+        trelloListDtos.add(new TrelloListDto("1", "In_Progress", true, new ArrayList<>()));
 
         List<TrelloBoardDto> trelloBoardDtos = new ArrayList<>();
         trelloBoardDtos.add(new TrelloBoardDto("1", "Kodilla_Course", trelloListDtos));
 
         List<TrelloList> mappedTrelloLists = new ArrayList<>();
-        mappedTrelloLists.add(new TrelloList("1", "In_Progress", true));
+        mappedTrelloLists.add(new TrelloList("1", "In_Progress", true, new ArrayList<>()));
 
         List<TrelloBoard> mappedTrelloBoards = new ArrayList<>();
         mappedTrelloBoards.add(new TrelloBoard("1", "Kodilla_Course", mappedTrelloLists));
@@ -79,13 +79,13 @@ public class TrelloFacadeTestSuite {
     public void shouldFetchEmptyList() {
         //Given
         List<TrelloListDto> trelloListDtos = new ArrayList<>();
-        trelloListDtos.add(new TrelloListDto("test_list", "test_name", false));
+        trelloListDtos.add(new TrelloListDto("test_list", "test_name", false, new ArrayList<>()));
 
         List<TrelloBoardDto> trelloBoardDtos = new ArrayList<>();
         trelloBoardDtos.add(new TrelloBoardDto("test_id", "test_name", trelloListDtos));
 
         List<TrelloList> mappedTrelloLists = new ArrayList<>();
-        mappedTrelloLists.add(new TrelloList("test_list", "test_name", false));
+        mappedTrelloLists.add(new TrelloList("test_list", "test_name", false, new ArrayList<>()));
 
         List<TrelloBoard> mappedTrelloBoards = new ArrayList<>();
         mappedTrelloBoards.add(new TrelloBoard("test_id", "test_name", mappedTrelloLists));

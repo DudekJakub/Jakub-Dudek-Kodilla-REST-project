@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @CrossOrigin("*")
@@ -33,6 +34,26 @@ public class TrelloController {
     @GetMapping("getTrelloListById")
     public Optional<TrelloListDto> getTrelloList(@RequestParam String id) {
         return trelloClient.getTrelloListById(id);
+    }
+
+    @GetMapping("getTrelloCardById")
+    public Optional<TrelloCardDto> getTrelloCard(@RequestParam String id) {
+        return trelloClient.getTrelloCard(id);
+    }
+
+    @GetMapping("getCardOwnerList")
+    public Optional<Map<String, String>> getCardOwnerList(@RequestParam String id) {
+        return trelloClient.getList_CardIsOn(id);
+    }
+
+    @GetMapping("getCardsFromList")
+    public Optional<List<TrelloCardDto>> getCardsFromList(@RequestParam String id) {
+        return trelloClient.getAllCardsFromList(id);
+    }
+
+    @GetMapping("getAllCardsFromBoard")
+    public Optional<List<TrelloCardDto>> getAllCardsFromBoard(@RequestParam String name) {
+        return trelloClient.getAllCardsFromBoard(name);
     }
 
     @PostMapping( "createTrelloCard")

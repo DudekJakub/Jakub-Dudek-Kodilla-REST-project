@@ -111,7 +111,7 @@ class TrelloClientTest {
         when(trelloConfig.getTrelloAppKey()).thenReturn("test_key");
         when(trelloConfig.getTrelloToken()).thenReturn("test_token");
 
-        TrelloListDto trelloList = new TrelloListDto("1", "test", false);
+        TrelloListDto trelloList = new TrelloListDto("1", "test", false, new ArrayList<>());
 
         URI uri = new URI("http://test.com/lists/1?key=test_key&token=test_token");
 

@@ -4,6 +4,7 @@ import com.crud.tasks.domain.Task;
 import com.crud.tasks.domain.TaskDto;
 import com.crud.tasks.mapper.TaskMapper;
 import com.crud.tasks.service.DbService;
+import com.crud.tasks.service.TaskService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -19,6 +20,7 @@ import java.util.Optional;
 public class TaskController {
 
     private final DbService service;
+    private final TaskService taskService;
     private final TaskMapper taskMapper;
 
     @RequestMapping(method = RequestMethod.GET, value = "getTasks")
@@ -31,6 +33,12 @@ public class TaskController {
     public TaskDto getTask(@RequestParam Long taskId) throws TaskNotFoundException {
         Optional<Task> optionalTask = service.getTaskById(taskId);
         return taskMapper.mapToTaskDto(optionalTask.orElseThrow(TaskNotFoundException::new));
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "checkIfTaskExistsOnTrello")
+    public boolean checkIfTaskExistsOnTrello(@RequestParam Long taskId) throws TaskNotFoundException {
+        Optional<Task> optionalTask = service.getTaskById(taskId);
+        return taskService.checkIfTaskIsOnTrello(optionalTask.orElseThrow(TaskNotFoundException::new).getId());
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "updateTask")

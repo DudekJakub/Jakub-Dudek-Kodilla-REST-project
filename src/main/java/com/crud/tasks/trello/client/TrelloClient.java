@@ -1,9 +1,6 @@
 package com.crud.tasks.trello.client;
 
-import com.crud.tasks.domain.CreatedTrelloCardDto;
-import com.crud.tasks.domain.TrelloBoardDto;
-import com.crud.tasks.domain.TrelloCardDto;
-import com.crud.tasks.domain.TrelloListDto;
+import com.crud.tasks.domain.*;
 import com.crud.tasks.trello.config.TrelloConfig;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -53,6 +50,37 @@ public class TrelloClient {
         }
     }
 
+    public Optional<List<TrelloCardDto>> getAllCardsFromList(String id) {
+        URI url = UriComponentsBuilder.fromHttpUrl(trelloConfig.getTrelloApiEndpoint() + "/lists/" + id + "/cards")
+                .queryParam("key", trelloConfig.getTrelloAppKey())
+                .queryParam("token", trelloConfig.getTrelloToken())
+                .build()
+                .encode().toUri();
+        try {
+            var trelloCardDtoList = Arrays.stream(Objects.requireNonNull(restTemplate.getForObject(url, TrelloCardDto[].class))).collect(Collectors.toList());
+            return Optional.of(trelloCardDtoList);
+        } catch (RestClientException e) {
+            LOGGER.error(e.getMessage(), e);
+            return Optional.empty();
+        }
+    }
+
+    public Optional<List<TrelloCardDto>> getAllCardsFromBoard(String name) {
+        try {
+            List<TrelloCardDto> allCardsFromBoard = new ArrayList<>();
+            this.getTrelloBoards().stream()
+                    .filter(tBDto -> tBDto.getName().equals(name))
+                    .findAny()
+                    .get()
+                    .getLists()
+                    .forEach(trelloListDto -> allCardsFromBoard.addAll(this.getAllCardsFromList(trelloListDto.getId()).get()));
+            return Optional.of(allCardsFromBoard);
+        } catch (RestClientException e) {
+            LOGGER.error(e.getMessage(), e);
+            return Optional.empty();
+        }
+    }
+
     public Optional<TrelloListDto> getTrelloListById(String id) {
         URI url = UriComponentsBuilder.fromHttpUrl(trelloConfig.getTrelloApiEndpoint() + "/lists/" + id)
                 .queryParam("key", trelloConfig.getTrelloAppKey())
@@ -61,7 +89,42 @@ public class TrelloClient {
                 .encode().toUri();
         try {
             TrelloListDto trelloListDto = restTemplate.getForObject(url, TrelloListDto.class);
-            return Optional.ofNullable(trelloListDto);
+            assert trelloListDto != null;
+            trelloListDto.setCardDtoList(this.getAllCardsFromList(id).orElse(new ArrayList<>()));
+            return Optional.of(trelloListDto);
+        } catch (RestClientException e) {
+            LOGGER.error(e.getMessage(), e);
+            return Optional.empty();
+        }
+    }
+
+    public Optional<TrelloCardDto> getTrelloCard(String id) {
+        URI url = UriComponentsBuilder.fromHttpUrl(trelloConfig.getTrelloApiEndpoint() + "/cards/" + id)
+                .queryParam("key", trelloConfig.getTrelloAppKey())
+                .queryParam("token", trelloConfig.getTrelloToken())
+                .queryParam("fields", "name,pos,desc,idList")
+                .build()
+                .encode().toUri();
+        try {
+            TrelloCardDto trelloCardDto = restTemplate.getForObject(url, TrelloCardDto.class);
+            return Optional.ofNullable(trelloCardDto);
+        } catch (RestClientException e) {
+            LOGGER.error(e.getMessage(), e);
+            return Optional.empty();
+        }
+    }
+
+    public Optional<Map<String, String>> getList_CardIsOn(String id) {
+        URI url = UriComponentsBuilder.fromHttpUrl(trelloConfig.getTrelloApiEndpoint() + "/cards/" + id + "/list")
+                .queryParam("key", trelloConfig.getTrelloAppKey())
+                .queryParam("token", trelloConfig.getTrelloToken())
+                .build()
+                .encode().toUri();
+        try {
+            var trelloListDto_ID = restTemplate.getForObject(url, TrelloListDto.class).getId();
+            var trelloListDto_NAME = restTemplate.getForObject(url, TrelloListDto.class).getName();
+            var mapOfTrelloListNameAndId = new HashMap<>(Map.of(trelloListDto_NAME, trelloListDto_ID));
+            return Optional.of(mapOfTrelloListNameAndId);
         } catch (RestClientException e) {
             LOGGER.error(e.getMessage(), e);
             return Optional.empty();

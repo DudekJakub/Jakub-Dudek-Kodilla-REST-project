@@ -32,15 +32,27 @@ public class TrelloMapper {
                 .collect(Collectors.toList());
     }
 
+    public List<TrelloCard> mapToCardList(final List<TrelloCardDto> trelloCardDto) {
+        return trelloCardDto.stream()
+                .map(tCDto -> new TrelloCard(tCDto.getListId(), tCDto.getName(), tCDto.getDescription(), tCDto.getPos()))
+                .collect(Collectors.toList());
+    }
+
+    public List<TrelloCardDto> mapToCardDtoList(final List<TrelloCard> trelloCards) {
+        return trelloCards.stream()
+                .map(tC -> new TrelloCardDto(tC.getListId(), tC.getName(), tC.getDescription(), tC.getPos()))
+                .collect(Collectors.toList());
+    }
+
     public List<TrelloList> mapToList(final List<TrelloListDto> trelloListDto) {
         return trelloListDto.stream()
-                .map(trelloList -> new TrelloList(trelloList.getId(), trelloList.getName(), trelloList.isClosed()))
+                .map(trelloList -> new TrelloList(trelloList.getId(), trelloList.getName(), trelloList.isClosed(), this.mapToCardList(trelloList.getCardDtoList())))
                 .collect(Collectors.toList());
     }
 
     public List<TrelloListDto> mapToListDto(final List<TrelloList> trelloLists) {
         return trelloLists.stream()
-                .map(tL -> new TrelloListDto(tL.getId(), tL.getName(), tL.isClosed()))
+                .map(tL -> new TrelloListDto(tL.getId(), tL.getName(), tL.isClosed(), this.mapToCardDtoList(tL.getCardList())))
                 .collect(Collectors.toList());
     }
 
