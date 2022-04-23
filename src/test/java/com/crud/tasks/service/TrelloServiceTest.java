@@ -1,9 +1,13 @@
 package com.crud.tasks.service;
 
-import com.crud.tasks.trello.client.TrelloClient;
+import com.crud.tasks.domain.TrelloBoard;
+import com.crud.tasks.domain.TrelloBoardDto;
+import com.crud.tasks.mapper.TrelloMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -14,7 +18,7 @@ class TrelloServiceTest {
     TrelloService trelloService;
 
     @Autowired
-    TrelloClient trelloClient;
+    TrelloMapper trelloMapper;
 
     @Test
     void getTrelloCardByName() {
@@ -30,12 +34,11 @@ class TrelloServiceTest {
     }
 
     @Test
-    void getCardById() {
-        //Given
-        String id = "626431eec303822dbce0fdac";
+    void test() {
+        List<TrelloBoardDto> trelloBoardDtos = trelloService.fetchTrelloBoards();
+        trelloBoardDtos.forEach(tBDto -> tBDto.getLists().forEach(tLDto -> tLDto.setCardList(trelloService.getAllCardsForList(tLDto.getId()))));
+        List<TrelloBoard> trelloBoards = trelloMapper.mapToBoards(trelloBoardDtos);
 
-        //When
-        var result = trelloClient.getTrelloCardById(id);
-        System.out.println(result);
+        trelloBoards.forEach(System.out::println);
     }
 }

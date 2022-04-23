@@ -25,7 +25,7 @@ public class TrelloFacade {
 
     public List<TrelloBoardDto> fetchTrelloBoards() {
         List<TrelloBoardDto> trelloBoardDtos = trelloService.fetchTrelloBoards();
-        trelloBoardDtos.forEach(tBDto -> tBDto.getLists().forEach(tLDto -> tLDto.setCardDtoList(trelloService.getAllCardsForList(tLDto.getId()))));
+        trelloBoardDtos.forEach(tBDto -> tBDto.getLists().forEach(tLDto -> tLDto.setCardList(trelloService.getAllCardsForList(tLDto.getId()))));
         List<TrelloBoard> trelloBoards = trelloMapper.mapToBoards(trelloBoardDtos);
         List<TrelloBoard> filteredBoards = trelloValidator.validateTrelloBoards(trelloBoards);
         return trelloMapper.mapToBoardsDto(filteredBoards);
