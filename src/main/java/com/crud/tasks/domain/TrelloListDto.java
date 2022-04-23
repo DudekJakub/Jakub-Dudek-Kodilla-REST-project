@@ -24,6 +24,5 @@ public class TrelloListDto {
     @JsonProperty("closed")
     private boolean isClosed;
 
-    @JsonProperty("cardList")
     private List<TrelloCardDto> cardList;
 }
