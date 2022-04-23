@@ -4,8 +4,11 @@ import com.crud.tasks.config.AdminConfiguration;
 import com.crud.tasks.domain.*;
 import com.crud.tasks.trello.client.TrelloClient;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,7 +16,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class TrelloService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(TrelloService.class);
     private static final String SUBJECT = "Tasks: New Trello Card";
+    private static final String KODILLA_TRELLO_BOARD = "Kodilla Aplication";
     private final TrelloClient trelloClient;
     private final SimpleEmailService emailService;
     private final AdminConfiguration adminConfig;
@@ -32,8 +37,25 @@ public class TrelloService {
                 .toCc(null)
                 .build();
 
-        Optional.ofNullable(newCard).ifPresent(card -> emailService.send(mail));
+        Optional.ofNullable(newCard).ifPresent(card -> emailService.sendNewTrelloCardMail(mail));
 
         return newCard;
+    }
+
+    public Optional<TrelloCardDto> getTrelloCardByName(String name) {
+        try {
+            return trelloClient.getAllCardsFromBoard(KODILLA_TRELLO_BOARD)
+                    .orElse(new ArrayList<>())
+                    .stream()
+                    .filter(trelloCardDto -> trelloCardDto.getName().equals(name))
+                    .findAny();
+        } catch (NullPointerException e) {
+            LOGGER.error(e.getLocalizedMessage(), e);
+            return Optional.empty();
+        }
+    }
+
+    public TrelloListDto getTrelloListById(String id) {
+            return trelloClient.getTrelloListById(id).orElseThrow();
     }
 }

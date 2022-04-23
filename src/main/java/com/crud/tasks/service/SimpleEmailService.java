@@ -3,6 +3,8 @@ package com.crud.tasks.service;
 import com.crud.tasks.domain.Mail;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
@@ -23,10 +25,10 @@ public class SimpleEmailService {
     @Autowired
     private final MailCreatorService mailCreatorService;
 
-    public void send(final Mail mail) {
+    public void sendNewTrelloCardMail(final Mail mail) {
         log.info("Starting email preparation");
         try {
-            javaMailSender.send(createMimeMessage(mail));
+            javaMailSender.send(createNewTrelloCardMimeMessage(mail));
 
             if (mail.getToCc() == null) {
                 log.info("Email has been sent (without specified Cc).");
@@ -34,6 +36,21 @@ public class SimpleEmailService {
                 log.info("Email has been sent.");
             }
         } catch (MailException e) {
+            log.error("Failed to process email sending: " + e.getMessage(), e);
+        }
+    }
+
+    public void sendTaskQntMail(final Mail mail) {
+        log.info("Starting email preparation");
+        try {
+            javaMailSender.send(createTaskQntMimeMessage(mail));
+
+            if (mail.getToCc() == null) {
+                log.info("Email has been sent (without specified Cc).");
+            } else {
+                log.info("Email has been sent.");
+            }
+        }  catch (MailException e) {
             log.error("Failed to process email sending: " + e.getMessage(), e);
         }
     }
@@ -65,7 +82,7 @@ public class SimpleEmailService {
         return mailMessage;
     }
 
-    private MimeMessagePreparator createMimeMessage(final Mail mail) {
+    private MimeMessagePreparator createNewTrelloCardMimeMessage(final Mail mail) {
         return mimeMessage -> {
             MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
             messageHelper.setTo(mail.getMailTo());
@@ -73,4 +90,13 @@ public class SimpleEmailService {
             messageHelper.setText(mailCreatorService.buildTrelloCardEmail(mail.getMessage()), true);
             };
         }
+
+    private MimeMessagePreparator createTaskQntMimeMessage(final Mail mail) {
+        return mimeMessage -> {
+            MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
+            messageHelper.setTo(mail.getMailTo());
+            messageHelper.setSubject(mail.getSubject());
+            messageHelper.setText(mailCreatorService.buildTaskQntInformationEmail(mail.getMessage()), true);
+        };
+    }
 }

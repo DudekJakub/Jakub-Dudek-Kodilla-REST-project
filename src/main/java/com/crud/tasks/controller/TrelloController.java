@@ -38,7 +38,7 @@ public class TrelloController {
 
     @GetMapping("getTrelloCardById")
     public Optional<TrelloCardDto> getTrelloCard(@RequestParam String id) {
-        return trelloClient.getTrelloCard(id);
+        return trelloClient.getTrelloCardById(id);
     }
 
     @GetMapping("getCardOwnerList")

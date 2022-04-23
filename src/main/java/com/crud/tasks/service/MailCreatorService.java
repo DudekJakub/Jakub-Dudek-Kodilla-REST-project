@@ -2,8 +2,6 @@ package com.crud.tasks.service;
 
 import com.crud.tasks.config.AdminConfiguration;
 import com.crud.tasks.domain.Task;
-import com.crud.tasks.repository.TaskRepository;
-import com.crud.tasks.trello.client.TrelloClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Lazy;
@@ -11,27 +9,30 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class MailCreatorService {
 
+    private static final String FRONTEND_URL = "https://dudekjakub.github.io/";
+    private static final String TRELLO_URL = "https://trello.com/b/rbKP3Hsq/kodilla-aplication";
+    private static final String HTML_FILE_TRELLO_CARD = "mail/created-trello-card-mail";
+    private static final String HTML_FILE_TASK_QNT = "mail/task-qnt-checkout-mai";
+
     @Qualifier("templateEngine")
     private final TemplateEngine _templateEngine;
 
     private final AdminConfiguration _adminConfiguration;
-    private final TaskRepository _taskRepository;
-    private final TrelloClient _trelloClient;
+    private final TrelloService _trelloService;
+    private final TaskService _taskService;
 
     @Autowired
-    public MailCreatorService(TemplateEngine templateEngine, AdminConfiguration adminConfiguration, TaskRepository taskRepository,@Lazy TrelloClient trelloClient) {
+    public MailCreatorService(TemplateEngine templateEngine, AdminConfiguration adminConfiguration,@Lazy TrelloService trelloService, TaskService taskService) {
         this._templateEngine = templateEngine;
         this._adminConfiguration = adminConfiguration;
-        this._taskRepository = taskRepository;
-        this._trelloClient = trelloClient;
+        this._trelloService = trelloService;
+        this._taskService = taskService;
     }
 
     public String buildTrelloCardEmail(String message) {
@@ -42,30 +43,41 @@ public class MailCreatorService {
         functionality.add("Application allows sending tasks to Trello");
 
         Context context = new Context();
-        context.setVariable("preview_message", "Thymeleaf-Test");
-        context.setVariable("message", message);
+        setContext(context, "Thymeleaf-Test", message, FRONTEND_URL, "Visit website",true, false);
         context.setVariable("application_functionality", functionality);
-        context.setVariable("tasks_url", "https://dudekjakub.github.io/");
-        context.setVariable("button", "Visit website");
-        context.setVariable("show_button", false);
-        context.setVariable("is_friend", true);
-        context.setVariable("user_nickName", _adminConfiguration);
         context.setVariable("goodbye_message", "Yours faithfully " + _adminConfiguration.getAdminName());
-        context.setVariable("admin_name", _adminConfiguration);
-        context.setVariable("company_detail_name", _adminConfiguration.getCompanyName());
-        context.setVariable("company_detail_goal", _adminConfiguration.getCompanyGoal());
-        context.setVariable("company_detail_email", _adminConfiguration.getCompanyEmail());
-        context.setVariable("company_detail_phone", _adminConfiguration.getCompanyPhone());
-        return _templateEngine.process("mail/created-trello-card-mail",context);
+        return _templateEngine.process(HTML_FILE_TRELLO_CARD, context);
     }
 
     public String buildTaskQntInformationEmail(String message) {
 
-        //task_name_isOnTrello (task_list)
-        //task_name_isNotOnTrello) (not on trello)
+        Map<String, String> mapOfTasksTitlesAndTrelloStatus = _taskService.getAllTasks()
+                .stream()
+                .collect(Collectors.toMap(
+                        Task::getTitle,
+                        task -> _taskService.checkIfTaskIsOnTrello(task.getId()) ?
+                                " (" + _trelloService.getTrelloListById(_trelloService.getTrelloCardByName(task.getTitle()).get().getListId()).getName() + ")"
+                                :
+                                " (Not found on Trello)" ));
 
-        var tasks = _taskRepository.findAll();
+        Context context = new Context();
+        setContext(context, "Task Quantity Checkout", message, TRELLO_URL, "Check Trello",true, true);
+        context.setVariable("task_and_trello_map", mapOfTasksTitlesAndTrelloStatus);
+        context.setVariable("goodbye_message", "See ya soon ~DJ");
+        return _templateEngine.process(HTML_FILE_TASK_QNT, context);
+    }
 
-        return "";
+    private void setContext(Context context, String previewMessage, String message, String defaultUrl, String buttonValue, boolean showButton, boolean isFriend) {
+        context.setVariable("preview_message", previewMessage);
+        context.setVariable("message", message);
+        context.setVariable("user_nickName", _adminConfiguration);
+        context.setVariable("button", buttonValue);
+        context.setVariable("show_button", showButton);
+        context.setVariable("default_url", defaultUrl);
+        context.setVariable("is_friend", isFriend);
+        context.setVariable("company_detail_name", _adminConfiguration.getCompanyName());
+        context.setVariable("company_detail_goal", _adminConfiguration.getCompanyGoal());
+        context.setVariable("company_detail_email", _adminConfiguration.getCompanyEmail());
+        context.setVariable("company_detail_phone", _adminConfiguration.getCompanyPhone());
     }
 }
