@@ -90,7 +90,7 @@ public class TrelloClient {
         try {
             TrelloListDto trelloListDto = restTemplate.getForObject(url, TrelloListDto.class);
             assert trelloListDto != null;
-            trelloListDto.setCardList(this.getAllCardsFromList(id).orElse(new ArrayList<>()));
+            trelloListDto.setCardDtoList(this.getAllCardsFromList(id).orElse(new ArrayList<>()));
             return Optional.of(trelloListDto);
         } catch (RestClientException e) {
             LOGGER.error(e.getMessage(), e);

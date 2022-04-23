@@ -2,7 +2,9 @@ package com.crud.tasks.service;
 
 import com.crud.tasks.domain.TrelloBoard;
 import com.crud.tasks.domain.TrelloBoardDto;
+import com.crud.tasks.domain.TrelloCard;
 import com.crud.tasks.mapper.TrelloMapper;
+import com.crud.tasks.trello.client.TrelloClient;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -36,7 +38,7 @@ class TrelloServiceTest {
     @Test
     void test() {
         List<TrelloBoardDto> trelloBoardDtos = trelloService.fetchTrelloBoards();
-        trelloBoardDtos.forEach(tBDto -> tBDto.getLists().forEach(tLDto -> tLDto.setCardList(trelloService.getAllCardsForList(tLDto.getId()))));
+        trelloBoardDtos.forEach(tBDto -> tBDto.getLists().forEach(tLDto -> tLDto.setCardDtoList(trelloService.getAllCardsForList(tLDto.getId()))));
         List<TrelloBoard> trelloBoards = trelloMapper.mapToBoards(trelloBoardDtos);
 
         trelloBoards.forEach(System.out::println);

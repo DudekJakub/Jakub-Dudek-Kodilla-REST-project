@@ -46,7 +46,7 @@ public class TrelloMapper {
 
     public List<TrelloList> mapToList(final List<TrelloListDto> trelloListDto) {
         return trelloListDto.stream()
-                .map(trelloList -> new TrelloList(trelloList.getId(), trelloList.getName(), trelloList.isClosed(), this.mapToCardList(trelloList.getCardList())))
+                .map(trelloList -> new TrelloList(trelloList.getId(), trelloList.getName(), trelloList.isClosed(), this.mapToCardList(trelloList.getCardDtoList())))
                 .collect(Collectors.toList());
     }
 
