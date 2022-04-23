@@ -2,6 +2,7 @@ package com.crud.tasks.trello.mapper;
 
 import com.crud.tasks.domain.*;
 import com.crud.tasks.mapper.TrelloMapper;
+import com.crud.tasks.trello.client.TrelloClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,9 @@ public class TrelloMapperTest {
 
     @Autowired
     TrelloMapper trelloMapper;
+
+    @Autowired
+    TrelloClient trelloClient;
 
     List<TrelloBoardDto> trelloBoardDtos = new ArrayList<>();
     List<TrelloBoard> trelloBoards = new ArrayList<>();
@@ -160,5 +164,16 @@ public class TrelloMapperTest {
         //Then
         assertNotNull(trelloBoard);
         assertEquals("test_boardDTO", trelloBoard.getName());
+    }
+
+    @Test
+    public void testMapToCardList() {
+        //Given
+        List<TrelloCardDto> list = trelloClient.getAllCardsFromBoard("Kodilla Aplication").get();
+        System.out.println(list.get(0));
+
+        //When
+        List<TrelloCard> resultList = trelloMapper.mapToCardList(list);
+        System.out.println(resultList.get(0));
     }
 }

@@ -14,4 +14,14 @@ public class TrelloList {
     private String name;
     private boolean isClosed;
     private List<TrelloCard> cardList;
+
+    @Override
+    public String toString() {
+        return "TrelloList{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", isClosed=" + isClosed +
+                ", cardList=" + cardList +
+                '}';
+    }
 }

@@ -34,13 +34,13 @@ public class TrelloMapper {
 
     public List<TrelloCard> mapToCardList(final List<TrelloCardDto> trelloCardDto) {
         return trelloCardDto.stream()
-                .map(tCDto -> new TrelloCard(tCDto.getListId(), tCDto.getName(), tCDto.getDescription(), tCDto.getPos()))
+                .map(tCDto -> new TrelloCard(tCDto.getName(), tCDto.getDescription(), tCDto.getPos(), tCDto.getListId()))
                 .collect(Collectors.toList());
     }
 
     public List<TrelloCardDto> mapToCardDtoList(final List<TrelloCard> trelloCards) {
         return trelloCards.stream()
-                .map(tC -> new TrelloCardDto(tC.getListId(), tC.getName(), tC.getDescription(), tC.getPos()))
+                .map(tC -> new TrelloCardDto(tC.getName(), tC.getDescription(), tC.getPos(), tC.getListId()))
                 .collect(Collectors.toList());
     }
 

@@ -34,6 +34,7 @@ public class TrelloFacadeTestSuite {
     @Mock
     private TrelloMapper trelloMapper;
 
+
     @Test
     public void shouldFetchPresentBoardsListWithOnePosition() {
         //Given
