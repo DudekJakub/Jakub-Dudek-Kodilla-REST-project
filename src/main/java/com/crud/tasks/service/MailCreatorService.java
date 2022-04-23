@@ -18,7 +18,7 @@ public class MailCreatorService {
     private static final String FRONTEND_URL = "https://dudekjakub.github.io/";
     private static final String TRELLO_URL = "https://trello.com/b/rbKP3Hsq/kodilla-aplication";
     private static final String HTML_FILE_TRELLO_CARD = "mail/created-trello-card-mail";
-    private static final String HTML_FILE_TASK_QNT = "mail/task-qnt-checkout-mai";
+    private static final String HTML_FILE_TASK_QNT = "mail/task-qnt-checkout-mail";
 
     @Qualifier("templateEngine")
     private final TemplateEngine _templateEngine;
