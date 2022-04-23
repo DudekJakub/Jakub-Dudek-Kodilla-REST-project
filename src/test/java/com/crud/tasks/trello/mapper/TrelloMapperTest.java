@@ -122,9 +122,9 @@ public class TrelloMapperTest {
         //Given
         TrelloCardDto trelloCardDto = TrelloCardDto.builder()
                 .name("test_name")
-                .description("test_description")
+                .desc("test_description")
                 .pos("top")
-                .listId("1")
+                .idList("1")
                 .build();
 
         //When
@@ -140,9 +140,9 @@ public class TrelloMapperTest {
         //Given
         TrelloCard trelloCard = TrelloCard.builder()
                 .name("test_name")
-                .description("test_description")
+                .desc("test_description")
                 .pos("bottom")
-                .listId("1")
+                .idList("1")
                 .build();
 
         //When

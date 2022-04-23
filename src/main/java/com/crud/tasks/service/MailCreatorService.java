@@ -17,6 +17,7 @@ public class MailCreatorService {
 
     private static final String FRONTEND_URL = "https://dudekjakub.github.io/";
     private static final String TRELLO_URL = "https://trello.com/b/rbKP3Hsq/kodilla-aplication";
+    private static final String TASKS_URL = "https://kodilla-task-application.herokuapp.com/v1/task/getTasks";
     private static final String HTML_FILE_TRELLO_CARD = "mail/created-trello-card-mail";
     private static final String HTML_FILE_TASK_QNT = "mail/task-qnt-checkout-mail";
 
@@ -60,8 +61,10 @@ public class MailCreatorService {
 
         Context context = new Context();
         setContext(context, "Task Quantity Checkout", message, TRELLO_URL, "Check Trello",true, true);
+        context.setVariable("tasks_button", "Check Tasks");
+        context.setVariable("tasks_url", TASKS_URL);
         context.setVariable("task_and_trello_map", tasksWithTrelloStatus);
-        context.setVariable("goodbye_message", "See ya soon ~DJ");
+        context.setVariable("goodbye_message", "Have a good day & good luck with tasks!");
         return _templateEngine.process(HTML_FILE_TASK_QNT, context);
     }
 
@@ -69,7 +72,7 @@ public class MailCreatorService {
         context.setVariable("preview_message", previewMessage);
         context.setVariable("message", message);
         context.setVariable("user_nickName", _adminConfiguration);
-        context.setVariable("button", buttonValue);
+        context.setVariable("default_button", buttonValue);
         context.setVariable("show_button", showButton);
         context.setVariable("default_url", defaultUrl);
         context.setVariable("is_friend", isFriend);

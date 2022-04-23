@@ -11,17 +11,17 @@ public class TrelloCard {
 
     private String id;
     private String name;
-    private String description;
+    private String desc;
     private String pos;
-    private String listId;
+    private String idList;
 
     @Override
     public String toString() {
         return "TrelloCard{" +
                 "name='" + name + '\'' +
-                ", description='" + description + '\'' +
+                ", description='" + desc + '\'' +
                 ", pos='" + pos + '\'' +
-                ", listId='" + listId + '\'' +
+                ", listId='" + idList + '\'' +
                 '}';
     }
 }

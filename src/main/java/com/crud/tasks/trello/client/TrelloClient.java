@@ -102,7 +102,7 @@ public class TrelloClient {
         URI url = UriComponentsBuilder.fromHttpUrl(trelloConfig.getTrelloApiEndpoint() + "/cards/" + id)
                 .queryParam("key", trelloConfig.getTrelloAppKey())
                 .queryParam("token", trelloConfig.getTrelloToken())
-                .queryParam("fields", "name,pos,desc,idList")
+                .queryParam("fields", "idShort,name,pos,desc,idList")
                 .build()
                 .encode().toUri();
         try {
@@ -134,9 +134,9 @@ public class TrelloClient {
                 .queryParam("key", trelloConfig.getTrelloAppKey())
                 .queryParam("token", trelloConfig.getTrelloToken())
                 .queryParam("name", trelloCardDto.getName())
-                .queryParam("desc", trelloCardDto.getDescription())
+                .queryParam("desc", trelloCardDto.getDesc())
                 .queryParam("pos", trelloCardDto.getPos())
-                .queryParam("idList", trelloCardDto.getListId())
+                .queryParam("idList", trelloCardDto.getIdList())
                 .build()
                 .encode().toUri();
         return restTemplate.postForObject(url, null, CreatedTrelloCardDto.class);
@@ -147,7 +147,7 @@ public class TrelloClient {
                 .queryParam("key", trelloConfig.getTrelloAppKey())
                 .queryParam("token", trelloConfig.getTrelloToken())
                 .queryParam("name", trelloCardDto.getName())
-                .queryParam("desc", trelloCardDto.getDescription())
+                .queryParam("desc", trelloCardDto.getDesc())
                 .queryParam("pos", trelloCardDto.getPos())
                 .build()
                 .encode().toUri();

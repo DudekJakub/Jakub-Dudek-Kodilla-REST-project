@@ -34,13 +34,13 @@ public class TrelloMapper {
 
     public List<TrelloCard> mapToCardList(final List<TrelloCardDto> trelloCardDto) {
         return trelloCardDto.stream()
-                .map(tCDto -> new TrelloCard(tCDto.getId(), tCDto.getName(), tCDto.getDescription(), tCDto.getPos(), tCDto.getListId()))
+                .map(tCDto -> new TrelloCard(tCDto.getId(), tCDto.getName(), tCDto.getDesc(), tCDto.getPos(), tCDto.getIdList()))
                 .collect(Collectors.toList());
     }
 
     public List<TrelloCardDto> mapToCardDtoList(final List<TrelloCard> trelloCards) {
         return trelloCards.stream()
-                .map(tC -> new TrelloCardDto(tC.getId(), tC.getName(), tC.getDescription(), tC.getPos(), tC.getListId()))
+                .map(tC -> new TrelloCardDto(tC.getId(), tC.getName(), tC.getDesc(), tC.getPos(), tC.getIdList()))
                 .collect(Collectors.toList());
     }
 
@@ -58,19 +58,21 @@ public class TrelloMapper {
 
     public TrelloCardDto mapToCardDto (final TrelloCard trelloCard) {
         return TrelloCardDto.builder()
+                .id(trelloCard.getId())
                 .name(trelloCard.getName())
-                .description(trelloCard.getDescription())
+                .desc(trelloCard.getDesc())
                 .pos(trelloCard.getPos())
-                .listId(trelloCard.getListId())
+                .idList(trelloCard.getIdList())
                 .build();
     }
 
     public TrelloCard mapToCard (final TrelloCardDto trelloCardDto) {
         return TrelloCard.builder()
+                .id(trelloCardDto.getId())
                 .name(trelloCardDto.getName())
-                .description(trelloCardDto.getDescription())
+                .desc(trelloCardDto.getDesc())
                 .pos(trelloCardDto.getPos())
-                .listId(trelloCardDto.getListId())
+                .idList(trelloCardDto.getIdList())
                 .build();
     }
 

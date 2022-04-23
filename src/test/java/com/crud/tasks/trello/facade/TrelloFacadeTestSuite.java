@@ -107,7 +107,7 @@ public class TrelloFacadeTestSuite {
     @Test
     public void shouldCreateCard() {
         //Given
-        TrelloCardDto cardToCreate = new TrelloCardDto("test_card", "test_desc", "bottom", "10");
+        TrelloCardDto cardToCreate = new TrelloCardDto("1","test_card", "test_desc", "bottom", "10");
         CreatedTrelloCardDto createdCard = new CreatedTrelloCardDto("1", "test_card", "http://test.com/card/1");
 
         when(trelloService.createTrelloCard(cardToCreate)).thenReturn(createdCard);

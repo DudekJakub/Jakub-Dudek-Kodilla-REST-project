@@ -77,7 +77,7 @@ class TrelloControllerTest {
     @Test
     void shouldCreateTrelloCard() throws Exception {
         //Given
-        TrelloCardDto cardToCreate = new TrelloCardDto("myTask", "taskDesc", "bottom", "10");
+        TrelloCardDto cardToCreate = new TrelloCardDto("1","myTask", "taskDesc", "bottom", "10");
         CreatedTrelloCardDto createdCard = new CreatedTrelloCardDto("20", "myTask", "http://trello.com/card/20");
 
         when(trelloFacade.createCard(cardToCreate)).thenReturn(createdCard);

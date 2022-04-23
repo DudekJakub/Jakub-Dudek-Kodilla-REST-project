@@ -39,6 +39,9 @@ dependencies {
 	//THYMELEAF
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 
+	//N+1 HIBERNATE DETECTOR
+    implementation 'com.yannbriancon:spring-hibernate-query-utils:2.0.0'
+
 	//DATABASES
 	runtimeOnly 'mysql:mysql-connector-java'
 	runtimeOnly 'org.postgresql:postgresql:42.3.1'

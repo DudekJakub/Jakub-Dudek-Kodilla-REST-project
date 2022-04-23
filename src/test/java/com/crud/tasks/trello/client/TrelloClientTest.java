@@ -64,7 +64,7 @@ class TrelloClientTest {
         when(trelloConfig.getTrelloApiEndpoint()).thenReturn("http://test.com");
         when(trelloConfig.getTrelloAppKey()).thenReturn("test");
         when(trelloConfig.getTrelloToken()).thenReturn("test");
-        TrelloCardDto trelloCardDto = new TrelloCardDto("Test task", "Test Description", "top", "test_id");
+        TrelloCardDto trelloCardDto = new TrelloCardDto("1","Test task", "Test Description", "top", "test_id");
 
         URI uri = new URI("http://test.com/cards?key=test&token=test&name=Test%20task&desc=Test%20Description&pos=top&idList=test_id");
 
@@ -136,7 +136,7 @@ class TrelloClientTest {
         when(trelloConfig.getTrelloToken()).thenReturn("test_token");
 
         CreatedTrelloCardDto cardDto = new CreatedTrelloCardDto("1", "test_card", "http://test.com/cardId/1");
-        TrelloCardDto updateCard = new TrelloCardDto("new_name", "new_description", "bottom", "10");
+        TrelloCardDto updateCard = new TrelloCardDto("1","new_name", "new_description", "bottom", "10");
 
         URI uri = new URI("http://test.com/cards/1?key=test_key&token=test_token&name=new_name&desc=new_description&pos=bottom");
 
