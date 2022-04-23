@@ -19,7 +19,6 @@ class TrelloServiceTest {
 
         //When
         var result = trelloService.getTrelloCardByName(name).get();
-        System.out.println(result);
 
         //Then
         assertEquals("Yeah ", result.getName());

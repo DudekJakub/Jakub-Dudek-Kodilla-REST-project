@@ -165,15 +165,4 @@ public class TrelloMapperTest {
         assertNotNull(trelloBoard);
         assertEquals("test_boardDTO", trelloBoard.getName());
     }
-
-    @Test
-    public void testMapToCardList() {
-        //Given
-        List<TrelloCardDto> list = trelloClient.getAllCardsFromBoard("Kodilla Aplication").get();
-        System.out.println(list.get(0));
-
-        //When
-        List<TrelloCard> resultList = trelloMapper.mapToCardList(list);
-        System.out.println(resultList.get(0));
-    }
 }
