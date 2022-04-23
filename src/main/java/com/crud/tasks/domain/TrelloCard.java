@@ -9,6 +9,7 @@ import lombok.Getter;
 @Builder
 public class TrelloCard {
 
+    private String id;
     private String name;
     private String description;
     private String pos;

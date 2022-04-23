@@ -53,7 +53,7 @@ public class MailCreatorService {
         List<String> tasksWithTrelloStatus = _taskService.getAllTasks()
                 .stream()
                 .map(task -> task.getTitle() + ((_taskService.checkIfTaskIsOnTrello(task.getId()) ?
-                        " (" + _trelloService.getNameOfTrelloListThatContainsCard(_trelloService.getTrelloCardByName(task.getTitle()).get().getName()) + ")"
+                        " (" + _trelloService.getNameOfTrelloListThatContainsCard(_trelloService.getTrelloCardByName(task.getTitle()).get().getId()) + ")"
                         :
                         " (Not found on Trello)" )))
                 .collect(Collectors.toList());

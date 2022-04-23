@@ -56,10 +56,6 @@ public class TrelloService {
         }
     }
 
-    public TrelloListDto getTrelloListById(String id) {
-            return trelloClient.getTrelloListById(id).orElseThrow();
-    }
-
     public List<TrelloCardDto> getAllCardsForList(String id) {
         return trelloClient.getAllCardsFromList(id).orElse(new ArrayList<>());
     }
