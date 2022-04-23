@@ -114,17 +114,15 @@ public class TrelloClient {
         }
     }
 
-    public Optional<Map<String, String>> getList_CardIsOn(String id) {
+    public Optional<TrelloListDto> getListThatContainsCard(String id) {
         URI url = UriComponentsBuilder.fromHttpUrl(trelloConfig.getTrelloApiEndpoint() + "/cards/" + id + "/list")
                 .queryParam("key", trelloConfig.getTrelloAppKey())
                 .queryParam("token", trelloConfig.getTrelloToken())
                 .build()
                 .encode().toUri();
         try {
-            var trelloListDto_ID = Objects.requireNonNull(restTemplate.getForObject(url, TrelloListDto.class)).getId();
-            var trelloListDto_NAME = Objects.requireNonNull(restTemplate.getForObject(url, TrelloListDto.class)).getName();
-            var mapOfTrelloListNameAndId = new HashMap<>(Map.of(trelloListDto_NAME, trelloListDto_ID));
-            return Optional.of(mapOfTrelloListNameAndId);
+            TrelloListDto trelloListDto = restTemplate.getForObject(url, TrelloListDto.class);
+            return Optional.ofNullable(trelloListDto);
         } catch (RestClientException e) {
             LOGGER.error(e.getMessage(), e);
             return Optional.empty();

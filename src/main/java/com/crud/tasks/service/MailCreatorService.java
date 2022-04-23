@@ -22,7 +22,6 @@ public class MailCreatorService {
 
     @Qualifier("templateEngine")
     private final TemplateEngine _templateEngine;
-
     private final AdminConfiguration _adminConfiguration;
     private final TrelloService _trelloService;
     private final TaskService _taskService;
@@ -51,18 +50,17 @@ public class MailCreatorService {
 
     public String buildTaskQntInformationEmail(String message) {
 
-        Map<String, String> mapOfTasksTitlesAndTrelloStatus = _taskService.getAllTasks()
+        List<String> tasksWithTrelloStatus = _taskService.getAllTasks()
                 .stream()
-                .collect(Collectors.toMap(
-                        Task::getTitle,
-                        task -> _taskService.checkIfTaskIsOnTrello(task.getId()) ?
-                                " (" + _trelloService.getTrelloListById(_trelloService.getTrelloCardByName(task.getTitle()).get().getListId()).getName() + ")"
-                                :
-                                " (Not found on Trello)" ));
+                .map(task -> task.getTitle() + ((_taskService.checkIfTaskIsOnTrello(task.getId()) ?
+                        " (" + _trelloService.getNameOfTrelloListThatContainsCard(_trelloService.getTrelloCardByName(task.getTitle()).get().getName()) + ")"
+                        :
+                        " (Not found on Trello)" )))
+                .collect(Collectors.toList());
 
         Context context = new Context();
         setContext(context, "Task Quantity Checkout", message, TRELLO_URL, "Check Trello",true, true);
-        context.setVariable("task_and_trello_map", mapOfTasksTitlesAndTrelloStatus);
+        context.setVariable("task_and_trello_map", tasksWithTrelloStatus);
         context.setVariable("goodbye_message", "See ya soon ~DJ");
         return _templateEngine.process(HTML_FILE_TASK_QNT, context);
     }

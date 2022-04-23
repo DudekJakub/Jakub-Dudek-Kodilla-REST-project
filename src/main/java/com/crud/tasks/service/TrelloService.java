@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -61,5 +62,9 @@ public class TrelloService {
 
     public List<TrelloCardDto> getAllCardsForList(String id) {
         return trelloClient.getAllCardsFromList(id).orElse(new ArrayList<>());
+    }
+
+    public String getNameOfTrelloListThatContainsCard(String cardId) {
+        return trelloClient.getListThatContainsCard(cardId).get().getName();
     }
 }

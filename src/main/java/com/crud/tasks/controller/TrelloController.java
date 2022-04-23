@@ -6,25 +6,25 @@ import com.crud.tasks.domain.TrelloCardDto;
 import com.crud.tasks.domain.TrelloListDto;
 import com.crud.tasks.trello.client.TrelloClient;
 import com.crud.tasks.trello.facade.TrelloFacade;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @CrossOrigin("*")
 @RestController
 @RequestMapping("/v1/trello")
-@RequiredArgsConstructor
 public class TrelloController {
 
-    @Autowired
     private final TrelloClient trelloClient;
+    private final TrelloFacade trelloFacade;
 
     @Autowired
-    private final TrelloFacade trelloFacade;
+    public TrelloController(TrelloClient trelloClient, TrelloFacade trelloFacade) {
+        this.trelloClient = trelloClient;
+        this.trelloFacade = trelloFacade;
+    }
 
     @GetMapping("getTrelloBoards")
     public List<TrelloBoardDto> getTrelloBoards() {
@@ -41,9 +41,9 @@ public class TrelloController {
         return trelloClient.getTrelloCardById(id);
     }
 
-    @GetMapping("getCardOwnerList")
-    public Optional<Map<String, String>> getCardOwnerList(@RequestParam String id) {
-        return trelloClient.getList_CardIsOn(id);
+    @GetMapping("getListThatContainsCard")
+    public Optional<TrelloListDto> getListThatContainsCard(@RequestParam String id) {
+        return trelloClient.getListThatContainsCard(id);
     }
 
     @GetMapping("getCardsFromList")

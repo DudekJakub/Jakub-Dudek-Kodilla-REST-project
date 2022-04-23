@@ -12,14 +12,16 @@ import java.util.List;
 @Component
 public class TrelloFacade {
 
-    @Autowired
-    private TrelloService trelloService;
+    private final TrelloService trelloService;
+    private final TrelloMapper trelloMapper;
+    private final TrelloValidator trelloValidator;
 
     @Autowired
-    private TrelloMapper trelloMapper;
-
-    @Autowired
-    private TrelloValidator trelloValidator;
+    public TrelloFacade(TrelloService trelloService, TrelloMapper trelloMapper, TrelloValidator trelloValidator) {
+        this.trelloService = trelloService;
+        this.trelloMapper = trelloMapper;
+        this.trelloValidator = trelloValidator;
+    }
 
     public List<TrelloBoardDto> fetchTrelloBoards() {
         List<TrelloBoardDto> trelloBoardDtos = trelloService.fetchTrelloBoards();
