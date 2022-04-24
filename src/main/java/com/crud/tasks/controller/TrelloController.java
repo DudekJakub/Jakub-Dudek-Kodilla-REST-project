@@ -26,49 +26,49 @@ public class TrelloController {
         this.trelloFacade = trelloFacade;
     }
 
-    @GetMapping("getTrelloBoards")
+    @GetMapping("/boards")
     public List<TrelloBoardDto> getTrelloBoards() {
         return trelloFacade.fetchTrelloBoards();
     }
 
-    @GetMapping("getTrelloListById")
-    public Optional<TrelloListDto> getTrelloList(@RequestParam String id) {
-        return trelloClient.getTrelloListById(id);
+    @GetMapping("/lists/{idList}")
+    public Optional<TrelloListDto> getTrelloList(@PathVariable String idList) {
+        return trelloClient.getTrelloListById(idList);
     }
 
-    @GetMapping("getTrelloCardById")
-    public Optional<TrelloCardDto> getTrelloCard(@RequestParam String id) {
-        return trelloClient.getTrelloCardById(id);
+    @GetMapping("/cards/{idCard}")
+    public Optional<TrelloCardDto> getTrelloCard(@PathVariable String idCard) {
+        return trelloClient.getTrelloCardById(idCard);
     }
 
-    @GetMapping("getListThatContainsCard")
-    public Optional<TrelloListDto> getListThatContainsCard(@RequestParam String id) {
-        return trelloClient.getListThatContainsCard(id);
+    @GetMapping("/lists/parentListOfCard/{idCard}")
+    public Optional<TrelloListDto> getListThatContainsCard(@PathVariable String idCard) {
+        return trelloClient.getListThatContainsCard(idCard);
     }
 
-    @GetMapping("getCardsFromList")
-    public Optional<List<TrelloCardDto>> getCardsFromList(@RequestParam String id) {
-        return trelloClient.getAllCardsFromList(id);
+    @GetMapping("/cards/fromList/{idList}")
+    public Optional<List<TrelloCardDto>> getCardsFromList(@RequestParam String idList) {
+        return trelloClient.getAllCardsFromList(idList);
     }
 
-    @GetMapping("getAllCardsFromBoard")
-    public Optional<List<TrelloCardDto>> getAllCardsFromBoard(@RequestParam String name) {
-        return trelloClient.getAllCardsFromBoard(name);
+    @GetMapping("/cards/fromBoard/{nameBoard}")
+    public Optional<List<TrelloCardDto>> getAllCardsFromBoard(@PathVariable String nameBoard) {
+        return trelloClient.getAllCardsFromBoard(nameBoard);
     }
 
-    @PostMapping( "createTrelloCard")
+    @PostMapping( "/cards")
     public CreatedTrelloCardDto createTrelloCard(@RequestBody TrelloCardDto trelloCardDto) {
         System.out.println(trelloCardDto);
         return trelloFacade.createCard(trelloCardDto);
     }
 
-    @PutMapping( "updateCard")
-    public void updateCard(@RequestParam String id, @RequestBody TrelloCardDto trelloCardDto) {
-        trelloClient.updateCard(id, trelloCardDto);
+    @PutMapping( "/cards")
+    public void updateCard(@RequestParam String idCard, @RequestBody TrelloCardDto trelloCardDto) {
+        trelloClient.updateCard(idCard, trelloCardDto);
     }
 
-    @DeleteMapping( "deleteCard")
-    public void deleteCard(@RequestParam String id) {
-        trelloClient.deleteCard(id);
+    @DeleteMapping( "/cards/{idCard}")
+    public void deleteCard(@RequestParam String idCard) {
+        trelloClient.deleteCard(idCard);
     }
 }
