@@ -62,8 +62,6 @@ public class TrelloFacadeTestSuite {
         assertNotNull(fetchedTrelloBoards);
         assertEquals(1, fetchedTrelloBoards.size());
 
-        System.out.println(fetchedTrelloBoards);
-
         fetchedTrelloBoards.forEach(fTB -> {
             assertEquals("1", fTB.getId());
             assertEquals("Kodilla_Course", fTB.getName());
