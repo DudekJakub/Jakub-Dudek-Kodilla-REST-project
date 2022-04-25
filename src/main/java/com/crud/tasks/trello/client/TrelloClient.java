@@ -65,23 +65,9 @@ public class TrelloClient {
         }
     }
 
-    public Optional<List<TrelloCardDto>> getAllCardsFromBoard(String name) {
-        try {
-            List<TrelloCardDto> allCardsFromBoard = new ArrayList<>();
-            this.getTrelloBoards().stream()
-                    .filter(tBDto -> tBDto.getName().equals(name))
-                    .findAny()
-                    .get()
-                    .getLists()
-                    .forEach(trelloListDto -> allCardsFromBoard.addAll(this.getAllCardsFromList(trelloListDto.getId()).get()));
-            return Optional.of(allCardsFromBoard);
-        } catch (RestClientException e) {
-            LOGGER.error(e.getMessage(), e);
-            return Optional.empty();
-        }
-    }
-
     public Optional<TrelloListDto> getTrelloListById(String id) {
+        List<TrelloCardDto> cardDtos = getAllCardsFromList(id).orElse(new ArrayList<>());
+
         URI url = UriComponentsBuilder.fromHttpUrl(trelloConfig.getTrelloApiEndpoint() + "/lists/" + id)
                 .queryParam("key", trelloConfig.getTrelloAppKey())
                 .queryParam("token", trelloConfig.getTrelloToken())
@@ -90,7 +76,7 @@ public class TrelloClient {
         try {
             TrelloListDto trelloListDto = restTemplate.getForObject(url, TrelloListDto.class);
             assert trelloListDto != null;
-            trelloListDto.setCardDtoList(this.getAllCardsFromList(id).orElse(new ArrayList<>()));
+            trelloListDto.setCardDtoList(cardDtos);
             return Optional.of(trelloListDto);
         } catch (RestClientException e) {
             LOGGER.error(e.getMessage(), e);

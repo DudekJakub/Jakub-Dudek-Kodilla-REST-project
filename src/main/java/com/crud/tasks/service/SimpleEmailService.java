@@ -21,8 +21,6 @@ import java.util.Optional;
 public class SimpleEmailService {
 
     private final JavaMailSender javaMailSender;
-
-    @Autowired
     private final MailCreatorService mailCreatorService;
 
     public void sendNewTrelloCardMail(final Mail mail) {

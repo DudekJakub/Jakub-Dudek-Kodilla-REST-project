@@ -4,6 +4,7 @@ import com.crud.tasks.config.AdminConfiguration;
 import com.crud.tasks.domain.Mail;
 import com.crud.tasks.repository.TaskRepository;
 import com.crud.tasks.service.SimpleEmailService;
+import com.crud.tasks.service.TaskService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Component;
 public class EmailScheduler {
 
     private final SimpleEmailService simpleEmailService;
-    private final TaskRepository taskRepository;
+    private final TaskService taskService;
     private final AdminConfiguration adminConfig;
 
     private static final String SUBJECT = "Tasks: Once a day email";
@@ -21,7 +22,7 @@ public class EmailScheduler {
 //    @Scheduled(fixedRate = 10000) //send mail every 10 sec
     @Scheduled(cron = "0 0 10 * * MON-FRI") //send mail at 10 o'clock every day between MON-FRI
     public void sendInformationEmail() {
-        long size = taskRepository.count();
+        long size = taskService.countTasks();
 
         String task;
         if(size == 1) {

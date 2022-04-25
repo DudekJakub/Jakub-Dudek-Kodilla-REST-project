@@ -2,15 +2,19 @@ package com.crud.tasks.service;
 
 import com.crud.tasks.config.AdminConfiguration;
 import com.crud.tasks.domain.Task;
+import com.crud.tasks.exception.TrelloNotFound;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.ITemplateEngine;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static java.lang.String.format;
 
 @Service
 public class MailCreatorService {
@@ -22,13 +26,13 @@ public class MailCreatorService {
     private static final String HTML_FILE_TASK_QNT = "mail/task-qnt-checkout-mail";
 
     @Qualifier("templateEngine")
-    private final TemplateEngine _templateEngine;
+    private final ITemplateEngine _templateEngine;
     private final AdminConfiguration _adminConfiguration;
     private final TrelloService _trelloService;
     private final TaskService _taskService;
 
     @Autowired
-    public MailCreatorService(TemplateEngine templateEngine, AdminConfiguration adminConfiguration,@Lazy TrelloService trelloService, TaskService taskService) {
+    public MailCreatorService(ITemplateEngine templateEngine, AdminConfiguration adminConfiguration,@Lazy TrelloService trelloService,@Lazy TaskService taskService) {
         this._templateEngine = templateEngine;
         this._adminConfiguration = adminConfiguration;
         this._trelloService = trelloService;
@@ -51,13 +55,7 @@ public class MailCreatorService {
 
     public String buildTaskQntInformationEmail(String message) {
 
-        List<String> tasksWithTrelloStatus = _taskService.getAllTasks()
-                .stream()
-                .map(task -> task.getTitle() + ((_taskService.checkIfTaskIsOnTrello(task.getId()) ?
-                        " (" + _trelloService.getNameOfTrelloListThatContainsCard(_trelloService.getTrelloCardByName(task.getTitle()).get().getId()) + ")"
-                        :
-                        " (Not found on Trello)" )))
-                .collect(Collectors.toList());
+        List<String> tasksWithTrelloStatus = this.returnTasksWithTrelloStatusList();
 
         Context context = new Context();
         setContext(context, "Task Quantity Checkout", message, TRELLO_URL, "Check Trello",true, true);
@@ -66,6 +64,25 @@ public class MailCreatorService {
         context.setVariable("task_and_trello_map", tasksWithTrelloStatus);
         context.setVariable("goodbye_message", "Have a good day & good luck with tasks!");
         return _templateEngine.process(HTML_FILE_TASK_QNT, context);
+    }
+
+    private List<String> returnTasksWithTrelloStatusList() {
+        return _taskService.getAllTasks().stream()
+                .map(this::mapTaskToString)
+                .collect(Collectors.toList());
+    }
+
+    private String mapTaskToString(Task task) {
+        var isOnTrello = _taskService.checkIfTaskIsOnTrello(task.getId());
+        var getTrelloCardByName = _trelloService.getTrelloCardByName(task.getTitle())
+                .orElseThrow(() -> new TrelloNotFound(TrelloNotFound.CARD_NF));
+        var getCardOwnerList = _trelloService.getNameOfTrelloListThatContainsCard(getTrelloCardByName.getId());
+
+        if (isOnTrello) {
+            return " (" + task.getTitle() + getCardOwnerList + ")";
+        } else {
+            return " (Not found on Trello)";
+        }
     }
 
     private void setContext(Context context, String previewMessage, String message, String defaultUrl, String buttonValue, boolean showButton, boolean isFriend) {

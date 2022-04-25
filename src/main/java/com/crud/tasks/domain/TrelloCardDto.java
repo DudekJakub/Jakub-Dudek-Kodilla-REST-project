@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TrelloCardDto {
 
-    private String id;
+    public String id;
     private String name;
     private String desc;
     private String pos;

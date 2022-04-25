@@ -1,27 +1,26 @@
 package com.crud.tasks.service;
 
 import com.crud.tasks.domain.Task;
-import com.crud.tasks.domain.TrelloListDto;
+import com.crud.tasks.exception.TaskNotFound;
+import com.crud.tasks.exception.TrelloNotFound;
 import com.crud.tasks.repository.TaskRepository;
-import com.crud.tasks.trello.client.TrelloClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class TaskService {
 
     private final DbService _dbService;
-    private final TrelloClient _trelloClient;
+    private final TrelloService _trelloService;
     private final TaskRepository _taskRepository;
     private static final String KODILLA_BOARD = "Kodilla Aplication";
 
     @Autowired
-    public TaskService(DbService dbService, TrelloClient trelloClient, TaskRepository taskRepository) {
+    public TaskService(DbService dbService, TrelloService trelloService, TaskRepository taskRepository) {
         this._dbService = dbService;
-        this._trelloClient = trelloClient;
+        this._trelloService = trelloService;
         this._taskRepository = taskRepository;
     }
 
@@ -34,12 +33,10 @@ public class TaskService {
     }
 
     public boolean checkIfTaskIsOnTrello(Long id) {
-        var task = _trelloClient.getAllCardsFromBoard(KODILLA_BOARD).orElse(new ArrayList<>())
-                .stream()
-                .filter(trelloCardDto -> trelloCardDto.getName().equals(_dbService.getTaskById(id)
-                        .orElseThrow()
-                        .getTitle()))
-                .findAny();
-        return task.isPresent();
+        var allCardsFromBoard = _trelloService.getAllCardsFromBoard(KODILLA_BOARD).orElseThrow(()-> new TrelloNotFound(TrelloNotFound.BOARD_NF));
+        var task = _dbService.getTaskById(id).orElseThrow(()-> new TaskNotFound(TaskNotFound.TASK_NF));
+
+        return allCardsFromBoard.stream()
+                .anyMatch(trelloCardDto -> trelloCardDto.getName().equals(task.getTitle()));
     }
 }

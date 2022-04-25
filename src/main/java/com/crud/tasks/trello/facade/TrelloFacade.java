@@ -5,6 +5,7 @@ import com.crud.tasks.mapper.TrelloMapper;
 import com.crud.tasks.service.TrelloService;
 import com.crud.tasks.trello.validator.TrelloValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -17,7 +18,7 @@ public class TrelloFacade {
     private final TrelloValidator trelloValidator;
 
     @Autowired
-    public TrelloFacade(TrelloService trelloService, TrelloMapper trelloMapper, TrelloValidator trelloValidator) {
+    public TrelloFacade(@Lazy TrelloService trelloService, TrelloMapper trelloMapper, TrelloValidator trelloValidator) {
         this.trelloService = trelloService;
         this.trelloMapper = trelloMapper;
         this.trelloValidator = trelloValidator;
